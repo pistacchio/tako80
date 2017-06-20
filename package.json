@@ -1,0 +1,41 @@
+{
+  "name": "tako80",
+  "version": "0.1.0",
+  "description": "Retro game engine",
+  "main": "tako80.js",
+  "directories": {},
+  "files": [
+    "example",
+    "project-template",
+    "src",
+    "tako80.min.js"
+  ],
+  "scripts": {
+    "concat": "concat src/twgl.min.js src/player.js src/pt.js src/tako80.core.js -o tako80.min.js",
+    "uglify": "uglifyjs tako80.min.js -o tako80.min.js",
+    "build": "npm run concat && npm run uglify"
+  },
+  "bin": {
+    "tako80": "tako80.js"
+  },
+  "author": "pistacchio@gmail.com",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pistacchio/tako80.git"
+  },
+  "homepage": "http://tako80.net",
+  "bugs": {
+    "url": "https://github.com/pistacchio/tako80/issues",
+    "email": "pistacchio@gmail.com"
+  },
+  "devDependencies": {
+    "concat": "^1.0.3",
+    "uglify-es": "^3.0.15"
+  },
+  "dependencies": {
+    "ncp": "^2.0.0",
+    "node-static": "^0.7.9",
+    "pngjs": "^3.2.0"
+  }
+}

@@ -1,0 +1,49 @@
+X cp flip
+X add layer
+X sprites
+X     set layer as sprite-based
+X     draw sprites
+X print
+X   font
+X sounds wave
+X     load sounds
+X     play sounds
+X music mod
+X     load mods
+X     play mods
+X init function
+X package / build
+X support for tiled
+X input
+X update loop
+X FPS
+X package cart
+X indexed colors
+X palette functions
+X code cleanup
+X start screen
+  pause
+  make custom mod
+  license
+  documentation
+  tutorial
+X more map functions
+X limit buttons
+N return points from draw functions ?
+X triangle (+ triangle fill)
+  website
+  code optimizations
+    memoize
+    memoize colors conversion
+    trig functions
+    random
+X example cart with all functions
+X mask
+X api refactoring
+X fix filled triangle (see example)
+  volume undefined = return volume (adjust example)
+X handle init if not defined in index.html
+X screenshot
+  gif screen capture
+X cart label
+C example label

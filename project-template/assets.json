@@ -1,0 +1,14 @@
+{
+    "images": {
+        "image1": "image1.png"
+    },
+    "sfx": {
+        "sfx1": "sfx1.wav"
+    },
+    "mods": {
+        "mod1": "mod1.mod"
+    },
+    "maps": {
+        "map1": "map1.json"
+    }
+}
