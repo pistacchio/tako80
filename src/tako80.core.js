@@ -136,6 +136,9 @@
             for (var i = 0, ii = 0; i < imageData.length; i+=4, ii++) {
                 let [color_r, color_g, color_b, a] = [imageData[i], imageData[i+1], imageData[i+2], imageData[i+3]];
                 paletteImage[ii] = getNearestColor(color_r, color_g, color_b, a);
+                if (paletteImage[ii] === 0 && a === 255) {
+                    paletteImage[ii] = 1;
+                }
             }
 
             return paletteImage;

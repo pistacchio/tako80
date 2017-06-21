@@ -2,3 +2,6 @@
     Initial release!
 0.1.1 [21-6-2017 ]
     - FIXED bug in compiling carts when they have a label
+0.1.2 [21-6-2017]
+    - ADDED stopcart
+    - FIXED bug in importing black pixels in images
