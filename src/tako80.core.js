@@ -1184,6 +1184,16 @@
         }
 
         /**
+         * Pauses the execution and stops the music
+         */
+        function stopcart () {
+            pause();
+            for (m in _mods) {
+                stop(m);
+            }
+        }
+
+        /**
          * Enables or disables printing the current fps
          */
         function fps (f = false) {
@@ -1317,7 +1327,7 @@
             print,
             sfx, play, stop, volume,
             cls, draw,
-            run, pause, runcart,
+            run, pause, runcart, stopcart,
             fps,
             btn, btnp,
             map, mapn, mget, mset,
@@ -1331,11 +1341,17 @@
     window.tako80 = {
         run: function (container, assets, updatefn, initfn, dev=true) {
             const tako80env = boot();
-            tako80env.run(container, assets, updatefn, initfn)
+            tako80env.run(container, assets, updatefn, initfn);
+            return tako80env;
         },
         runcart: function (container, cart) {
             const tako80env = boot();
             tako80env.runcart(container, cart, tako80env);
+            return tako80env;
+        },
+        stopcart: function (tako80env) {
+            tako80env.stopcart();
+            return tako80env;
         }
     };
 }());
