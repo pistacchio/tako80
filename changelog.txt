@@ -1,2 +1,4 @@
 0.1.0 [20-6-2017 ]
     Initial release!
+0.1.1 [21-6-2017 ]
+    - FIXED bug in compiling carts when they have a label

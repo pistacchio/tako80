@@ -93,88 +93,100 @@ function compile () {
     const separatorBuffer = Buffer.from('***TAKO80-SEPARATOR***');
     const separatorBufferSub = Buffer.from('***TAKO80-SUB-SEPARATOR***');
 
-    data.push(fs.readFileSync(path.join('../', 'src', CART_TEMPLATE)));
-
-    let cartData = fs.readFileSync('cart.js');
-    data.push(cartData);
-    data.push(separatorBuffer);
-
-    const assets = JSON.parse(fs.readFileSync('assets.json'));
-
-    for (let img in assets.images) {
-        let imgData = new Buffer(img.padEnd(100))
-        imgData = Buffer.concat([imgData, fs.readFileSync(assets.images[img])]);
-
-        data.push(imgData);
-        data.push(separatorBufferSub);
+    if (fs.existsSync('dist/cart.png')) {
+        fs.unlinkSync('dist/cart.png');
     }
-    data.push(separatorBuffer);
 
-    for (let sfx in assets.sfx || {}) {
-        let sfxData = new Buffer(sfx.padEnd(100))
-        sfxData = Buffer.concat([sfxData, fs.readFileSync(assets.sfx[sfx])]);
-        data.push(sfxData);
-        data.push(separatorBufferSub);
+    function packCart () {
+        data.push(fs.readFileSync('dist/cart.png'));
+
+        let cartData = fs.readFileSync('cart.js');
+        data.push(cartData);
+        data.push(separatorBuffer);
+
+        const assets = JSON.parse(fs.readFileSync('assets.json'));
+
+        for (let img in assets.images) {
+            let imgData = new Buffer(img.padEnd(100))
+            imgData = Buffer.concat([imgData, fs.readFileSync(assets.images[img])]);
+
+            data.push(imgData);
+            data.push(separatorBufferSub);
+        }
+        data.push(separatorBuffer);
+
+        for (let sfx in assets.sfx || {}) {
+            let sfxData = new Buffer(sfx.padEnd(100))
+            sfxData = Buffer.concat([sfxData, fs.readFileSync(assets.sfx[sfx])]);
+            data.push(sfxData);
+            data.push(separatorBufferSub);
+        }
+        data.push(separatorBuffer);
+
+        for (let mod in assets.mods || {}) {
+            let modData = new Buffer(mod.padEnd(100))
+            modData = Buffer.concat([modData, fs.readFileSync(assets.mods[mod])]);
+            data.push(modData);
+            data.push(separatorBufferSub);
+        }
+        data.push(separatorBuffer);
+
+        for (let map in assets.maps || {}) {
+            let mapData = new Buffer(map.padEnd(100))
+            mapData = Buffer.concat([mapData, fs.readFileSync(assets.maps[map])]);
+            data.push(mapData);
+            data.push(separatorBufferSub);
+        }
+        data.push(separatorBuffer);
+
+        fs.writeFileSync('dist/cart.png', Buffer.concat(data));
+
+        ncp(path.join(__dirname, TAKO_MAIN_FILE), path.join('dist/', TAKO_MAIN_FILE));
     }
-    data.push(separatorBuffer);
 
-    for (let mod in assets.mods || {}) {
-        let modData = new Buffer(mod.padEnd(100))
-        modData = Buffer.concat([modData, fs.readFileSync(assets.mods[mod])]);
-        data.push(modData);
-        data.push(separatorBufferSub);
-    }
-    data.push(separatorBuffer);
+    ncp(path.join(__dirname, 'src', CART_TEMPLATE), 'dist/cart.png', (err) => {
+        // label
+        if (fs.existsSync('label.png')) {
+            const cartData = fs.readFileSync('dist/cart.png');
+            const labelData = fs.readFileSync('label.png');
 
-    for (let map in assets.maps || {}) {
-        let mapData = new Buffer(map.padEnd(100))
-        mapData = Buffer.concat([mapData, fs.readFileSync(assets.maps[map])]);
-        data.push(mapData);
-        data.push(separatorBufferSub);
-    }
-    data.push(separatorBuffer);
-
-    fs.writeFileSync('dist/cart.png', Buffer.concat(data));
-
-    ncp(path.join(__dirname, TAKO_MAIN_FILE), path.join('dist/', TAKO_MAIN_FILE));
-
-    // label
-    if (fs.existsSync('label.png')) {
-        const cartData = fs.readFileSync('dist/cart.png');
-        const labelData = fs.readFileSync('label.png');
-
-        new png({filterType: 4}).parse(cartData)
-        .on('parsed', function () {
-            const cart = this;
-
-            new png({filterType: 4}).parse(labelData)
+            new png({filterType: 4}).parse(cartData)
             .on('parsed', function () {
-                const label = this;
+                const cart = this;
 
-                if (label.width !== LABEL_WIDTH || label.height !== LABEL_HEIGHT) {
-                    console.log(`Label found, but the size is wrong. It must be ${ LABEL_WIDTH } x ${ LABEL_HEIGHT }`);
-                    process.exit(0);
-                }
+                new png({filterType: 4}).parse(labelData)
+                .on('parsed', function () {
+                    const label = this;
 
-                for (let y = 0; y < label.height; y++) {
-                    for (let x = 0; x < label.width; x++) {
-                        const labelIdx = (label.width * y + x) << 2;
-                        const cartX = x + 23;
-                        const cartY = y + 28;
-                        const cartIdx = (cart.width * cartY + cartX) << 2;
-
-                        // invert color
-                        cart.data[cartIdx]   = label.data[labelIdx];
-                        cart.data[cartIdx+1] = label.data[labelIdx+1];
-                        cart.data[cartIdx+2] = label.data[labelIdx+2];
-                        cart.data[cartIdx+3] = label.data[labelIdx+3];
+                    if (label.width !== LABEL_WIDTH || label.height !== LABEL_HEIGHT) {
+                        console.log(`Label found, but the size is wrong. It must be ${ LABEL_WIDTH } x ${ LABEL_HEIGHT }`);
+                        process.exit(0);
                     }
-                }
 
-                cart.pack().pipe(fs.createWriteStream('dist/cart.png'));
+                    for (let y = 0; y < label.height; y++) {
+                        for (let x = 0; x < label.width; x++) {
+                            const labelIdx = (label.width * y + x) << 2;
+                            const cartX = x + 23;
+                            const cartY = y + 28;
+                            const cartIdx = (cart.width * cartY + cartX) << 2;
+
+                            // invert color
+                            cart.data[cartIdx]   = label.data[labelIdx];
+                            cart.data[cartIdx+1] = label.data[labelIdx+1];
+                            cart.data[cartIdx+2] = label.data[labelIdx+2];
+                            cart.data[cartIdx+3] = label.data[labelIdx+3];
+                        }
+                    }
+
+                    const ws = fs.createWriteStream('dist/cart.png');
+                    ws.on('finish', packCart);
+                    cart.pack().pipe(ws);
+                });
             });
-        });
-    }
+        } else {
+            packCart();
+        }
+    });
 }
 
 if (['new', 'compile', 'devel', 'example'].indexOf(process.argv[2]) === -1) {
