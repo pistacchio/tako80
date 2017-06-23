@@ -1,6 +1,6 @@
 {
   "name": "tako80",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "Retro game engine",
   "main": "tako80.js",
   "directories": {},
@@ -36,6 +36,8 @@
   "dependencies": {
     "ncp": "^2.0.0",
     "node-static": "^0.7.9",
-    "pngjs": "^3.2.0"
+    "npmview": "0.0.4",
+    "pngjs": "^3.2.0",
+    "semver": "^5.3.0"
   }
 }

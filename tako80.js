@@ -6,6 +6,8 @@ const path    = require('path');
 const http    = require('http');
 const static  = require('node-static');
 const png     = require('pngjs').PNG;
+const npmview = require('npmview');
+const semver  = require('semver');
 
 const PROJECT_TEMPLATE_DIR = 'project-template';
 const PROJECT_EXAMPLE_DIR  = 'example';
@@ -21,10 +23,20 @@ function printHelp () {
     console.log('\ttako80 devel');
     console.log('\ttako80 compile');
     console.log('\ttako80 example');
-    process.exit(0);
 }
 
-if (process.argv.length <= 2) {
+npmview('tako80', function(err, version, moduleInfo) {
+    if (!err) {
+        const currentVersion = require(path.join(__dirname, 'package.json')).version;
+
+        if(semver.gt(version, currentVersion)) {
+            console.log(`\nA new version of tako80 (${ version }) is available. Please run:\n\tsudo npm update -g tako80\n`);
+        }
+    }
+});
+
+if (['new', 'compile', 'devel', 'example'].indexOf(process.argv[2]) === -1
+    || process.argv.length <= 2) {
     printHelp();
 }
 
@@ -187,8 +199,4 @@ function compile () {
             packCart();
         }
     });
-}
-
-if (['new', 'compile', 'devel', 'example'].indexOf(process.argv[2]) === -1) {
-    printHelp();
 }
