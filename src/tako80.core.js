@@ -89,7 +89,8 @@
             fps: 0,
             lastFps: 0
         }
-        const _btns = {};
+        const _btns  = {};
+        const _btnsp = {};
 
         /**
          * Loads the palette Uint8Array with colors from colors
@@ -230,18 +231,24 @@
             // on the _btns object to 0. after one frame, it is set to 1 by the main game loop
             // (to handle the "just pressed")
             canvas.addEventListener('keydown', function (evt) {
-                let key = ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft', 'a', 's', 'z', 'x'].indexOf(evt.key);
+                const pressedKey = evt.key.toLowerCase();
+                const key = ['arrowup', 'arrowright', 'arrowdown', 'arrowleft', 'a', 's', 'z', 'x'].indexOf(pressedKey);
                 if (key !== -1) {
                     evt.preventDefault();
                     evt.stopPropagation();
-                    _btns[evt.key] = 0;
+                    _btns[pressedKey] = true;
+                    if (_btnsp[pressedKey] === undefined) {
+                        _btnsp[pressedKey] = 0;
+                    }
                 }
             });
 
             // remove the entry of the key from the _btns object
             canvas.addEventListener('keyup', function (evt) {
+                const pressedKey = evt.key.toLowerCase();
                 try {
-                    delete _btns[evt.key];
+                    delete _btns[pressedKey];
+                    delete _btnsp[pressedKey];
                 } catch (e) {}
             });
 
@@ -981,8 +988,8 @@
                     // set all the buttons to 1 (they are initially set as 0). This
                     // makes it possible to call btnp (has the button been pressed
                     // in the last frame?)
-                    for (let btn in _btns) {
-                        _btns[btn] = 1;
+                    for (let btn in _btnsp) {
+                        _btnsp[btn] = 1;
                     }
 
                     // update the fps counter
@@ -1220,24 +1227,24 @@
          */
         function btn (k) {
             switch (k) {
-                case 'up':    k = 'ArrowUp'; break;
-                case 'down':  k = 'ArrowDown'; break;
-                case 'left':  k = 'ArrowLeft'; break;
-                case 'right': k = 'ArrowRight'; break;
+                case 'up':    k = 'arrowup'; break;
+                case 'down':  k = 'arrowdown'; break;
+                case 'left':  k = 'arrowleft'; break;
+                case 'right': k = 'arrowright'; break;
             }
-            return _btns[k] !== undefined;
+            return _btns[k.toLowerCase()] === true;
         }
 
         /** Return true if the specified key has been recently pressed
          */
         function btnp (k) {
             switch (k) {
-                case 'up':    k = 'ArrowUp'; break;
-                case 'down':  k = 'ArrowDown'; break;
-                case 'left':  k = 'ArrowLeft'; break;
-                case 'right': k = 'ArrowRight'; break;
+                case 'up':    k = 'arrowup'; break;
+                case 'down':  k = 'arrowdown'; break;
+                case 'left':  k = 'arrowleft'; break;
+                case 'right': k = 'arrowright'; break;
             }
-            return _btns[k] === 0;
+            return _btnsp[k.toLowerCase()] === 0;
         }
 
         /**
