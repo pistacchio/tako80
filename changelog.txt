@@ -2,6 +2,11 @@
     Initial release!
 0.1.1 [21-6-2017 ]
     - FIXED bug in compiling carts when they have a label
-0.1.2 [21-6-2017]
+0.1.2
     - ADDED stopcart
-    - FIXED bug in importing black pixels in images
+0.1.4
+    - ENHANCEMENT Optimized map drawing for large maps
+    - ENHANCEMENT Suggest new version if available
+    - FIXED btnp repeat (#4)
+    - FIXED buttons keylock (#5)
+    - FIXED inverted system font case (#6)
