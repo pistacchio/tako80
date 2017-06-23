@@ -794,6 +794,11 @@
             if (!_images[l].sprw || !_images[l].sprh)
                 throw 'The selected layer is not a spritesheet';
 
+            // ignore offscreen sprites
+            if (   x - _camera[0] < 0 - _images[l].sprw || x - _camera[0] > WIDTH
+                || y - _camera[1] < 0 - _images[l].sprh || y - _camera[1] > HEIGHT)
+                    return
+
             let sprw = _images[l].sprw;
             let sprh = _images[l].sprh;
             if (!sprw) sprw = _images[l].width;
@@ -1255,10 +1260,10 @@
                     const tileIdx = ((yy * _maps[m].width) + xx);
                     if (_maps[m].data[tileIdx] === 0) continue;
                     const tile = _maps[m].data[tileIdx] - 1; // tiled is 1 based
+                    const _xx = xx * _images[l].sprw + x;
+                    const _yy = yy * _images[l].sprh + y;
 
-                    sprcp(l, tile,
-                        (xx * _images[l].sprw) + x,
-                        (yy * _images[l].sprh) + y)
+                    sprcp(l, tile, _xx, _yy);
                 }
             }
         }
