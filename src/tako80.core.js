@@ -78,7 +78,7 @@
         let _color    = 0xF;
         let _layer    = 0;
         let _camera   = [0, 0];
-        let _colorize = false;
+        let _colorize = null;
         let _status   = 'paused';
         let _sshot    = false;
         let _sshotfn  = null;
@@ -446,11 +446,11 @@
         }
 
         /**
-         * Enable or disable the colorize functionality. When it is enables, draw
+         * Sets a color as "corizer". When it is enables, draw
          * all the images and sprites with the current color for any non-transparent
          * pixel
          */
-        function colorize (c = false) {
+        function colorize (c = null) {
             _colorize = c;
         }
 
@@ -761,9 +761,9 @@
                     let _y = (y / rh) + sy;
 
                     const pixelColor = pget(_x, _y);
-                    if (_colorize) {
+                    if (_colorize !== null) {
                         if (pixelColor === 0) continue;
-                        color(_color);
+                        color(_colorize);
                     } else {
                         color(pixelColor);
                     }
@@ -824,11 +824,11 @@
 
         /**
          * Print the string "text" at the coordinate (x, y) using the layer "l"
-         * as font (default = system font). Eventally colorize it.
+         * as font (default = system font). If colorize is enabled, the font will adhere to it.
          * The layer used as font must have been set as spritesheet and must
          * have exaclty 96 sprites (see the system font.png as an example)
          */
-        function print (text, x = 0, y = 0, l = 'font', c = false) {
+        function print (text, x = 0, y = 0, l = 'font') {
             text = text.toString();
 
             if (!_images[l].sprw || !_images[l].sprh)
@@ -836,14 +836,10 @@
             if ((_images[l].width / _images[l].sprw) * (_images[l].height / _images[l].sprh) !== 96)
                 throw 'A font spritesheet must have exactly 96 sprites';
 
-            const currentColorize = _colorize;
-            colorize(c);
-
             for (var i = 0; i < text.length; i++) {
                 const sprIdx = text.charCodeAt(i) - 32;
                 sprcp(l, sprIdx, x + (i * _images[l].sprw), y);
             }
-            colorize(currentColorize);
         }
 
         /**

@@ -60,6 +60,10 @@ if (process.argv[2] === 'example') {
 }
 
 if (process.argv[2] === 'devel') {
+    let port = 3000;
+    if (!isNaN(process.argv[3])) {
+        port = parseInt(process.argv[3]);
+    }
     // TODO: check if it doesn't seem like a tako80 project directory
     // if (process.argv.length === 3) {
     //     console.log('Usage: tako80 new PROJECT_NAME');
@@ -91,9 +95,9 @@ if (process.argv[2] === 'devel') {
         }
     });
 
-    server.listen(3000, '127.0.0.1');
+    server.listen(port, '127.0.0.1');
 
-    console.log('Tako 80 dev server running at http://127.0.0.1:3000/');
+    console.log(`Tako 80 dev server running at http://127.0.0.1:${ port }/`);
 }
 
 if (process.argv[2] === 'compile') {

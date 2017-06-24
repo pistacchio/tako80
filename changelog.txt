@@ -7,6 +7,8 @@
 0.1.4
     - ENHANCEMENT Optimized map drawing for large maps
     - ENHANCEMENT Suggest new version if available
+    - ENHANCEMENT Colorize now accepts a color
+    - ENHANCEMENT tako80 accepts an optional port number
     - FIXED btnp repeat (#4)
     - FIXED buttons keylock (#5)
     - FIXED inverted system font case (#6)

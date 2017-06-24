@@ -48,7 +48,6 @@ function init () {
     layer('mask2');
     color(1);
     rectfill(00, 80, 80, 30);
-
 }
 
 // this function is called 60 times per second
@@ -123,12 +122,13 @@ function update () {
     print("S", 13, 121);
 
     // print the letters "Z" and "X" with the "colorize" option. The colorize
-    // option, that can also be turned on with colorize(true), draws fonts and
+    // option, that can also be turned on with colorize(COLOR), draws fonts and
     // sprites with the current color for each pixel that is not "0"
     // (transparent color)
-    color(65);
-    print("Z", 5, 130, 'font', true);
-    print("X", 15, 130, 'font', true);
+    colorize(65);
+    print("Z", 5, 130);
+    print("X", 15, 130);
+    colorize();
 
     // if the button "a" is pressed, set the variable buttonAPress to 10.
     // for the following 10 frames, button "a" will be drawn with the sprite
@@ -233,6 +233,7 @@ function update () {
     // the camera function sets an offsets and all subsequent drawing functions
     // will be shifted accordingly. calling camera without argumets resets the
     // camera settings to (0, 0)
+
     camera(cameraX, cameraY);
     mask('mask2');
     map('map3', 'ss1', 0, 110);
@@ -240,15 +241,16 @@ function update () {
     camera();
 
     // left and right arrows move the camera when drawing the small map
-    if (btnp('left')) {
+    if (btn('left')) {
         cameraX += 2;
     }
-    if (btnp('right')) {
+    if (btn('right')) {
         cameraX -= 2;
     }
 
     // draw a bouncing ball on the layer 'mask' if it is used to mask the main
     // layer
+
     if (maskStatus === 'mask' || maskStatus === 'maskInverted') {
         // select the layer 'mask'
         layer('mask');
