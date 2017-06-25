@@ -9,6 +9,9 @@ To learn more about **tako80** read the [manual](http://tako80.net/manual).
 
 ### Changelog
 
+0.1.7 [25-6-2017]
+    - FIXED wrong publish of 0.1.5
+    - FIXED error when assets.json is incomplete
 0.1.5 [25-6-2017]
     - FIXED Set tile "0" on maps now works correctly
     - ADD sin(), cos(), atan2 functions compatible with PICO-8

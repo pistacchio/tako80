@@ -258,9 +258,9 @@
             return new Promise(resolve => {
                 // load the default font
                 assets.images.font = SYSTEM_FONT_DATA;
-                const assetsToLoad = Object.keys(assets.images).length
-                                   + Object.keys(assets.mods).length
-                                   + Object.keys(assets.maps).length;
+                const assetsToLoad = Object.keys(assets.images || {}).length
+                                   + Object.keys(assets.mods   || {}).length
+                                   + Object.keys(assets.maps   || {}).length;
 
                 /**
                  * checks that the number of assets to load equals to the number of
@@ -967,7 +967,12 @@
                     window.mset     = mset;
                     window.pal      = pal;
                     window.tri      = tri;
-                    window.trifill  = trifill;
+                    window.trifill = trifill;
+                    window.cos     = cos;
+                    window.sin     = sin;
+                    window.atan2   = atan2;
+                    window.rnd     = rnd;
+                    window.rndseed = rndseed;
                 }
 
                 _status = 'running';
