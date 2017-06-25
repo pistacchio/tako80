@@ -63,6 +63,19 @@ if (process.argv[2] === 'example') {
     ncp(path.join(__dirname, TAKO_MAIN_FILE), path.join('tako80example', TAKO_MAIN_FILE));
 }
 
+function readCartJs () {
+    let cartJs = fs.readFileSync('cart.js').toString();
+
+    const assets = JSON.parse(fs.readFileSync('assets.json').toString());
+
+    if (assets.sources) {
+        for (let source of assets.sources) {
+            cartJs = `${ fs.readFileSync(source).toString() }\n\n${ cartJs }`;
+        }
+    }
+    return cartJs;
+}
+
 if (process.argv[2] === 'devel') {
     let port = 3000;
     if (!isNaN(process.argv[3])) {
@@ -94,6 +107,10 @@ if (process.argv[2] === 'devel') {
         } else if (req.url === '/compile') {
             console.log('Compiled cart');
             compile();
+        } else if (req.url === '/cart.js') {
+            const cartJs = readCartJs();
+            res.writeHead(200, {'Content-Type': 'text/javascript'});
+            res.end(cartJs);
         } else {
             file.serve(req, res);
         }
@@ -120,7 +137,8 @@ function compile () {
     function packCart () {
         data.push(fs.readFileSync('dist/cart.png'));
 
-        let cartData = fs.readFileSync('cart.js');
+        const cartJs = readCartJs();
+        let cartData = Buffer.from(cartJs);
         data.push(cartData);
         data.push(separatorBuffer);
 

@@ -48,4 +48,4 @@ X screenshot
 X cart label
 X example label
 X update release
-  more source files
+X more source files

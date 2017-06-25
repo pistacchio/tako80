@@ -17,3 +17,4 @@
     - ADD sin(), cos(), atan2 functions compatible with PICO-8
     - ADD rnd(), rndseed()
     - ADD taok80 update
+    - ADD multiple source files
