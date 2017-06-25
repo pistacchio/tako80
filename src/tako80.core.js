@@ -92,6 +92,8 @@
         const _btns  = {};
         const _btnsp = {};
 
+        let _rndSeed = new Date().getTime();
+
         /**
          * Loads the palette Uint8Array with colors from colors
          */
@@ -1132,8 +1134,8 @@
                         let code = new TextDecoder("utf-8").decode(splittedcartData[0]);
                         const cartInitFnName = `tako80cartInit${ new Date().getTime() }`;
                         const cartUpdateFnName = `tako80cartUpdate${ new Date().getTime() }`;
-                        code = code.replace(/function\s+update\s+\(\)/, `window.${cartUpdateFnName} = function (color, colorize, layer, layern, mask, camera, pset, pget, line, rect, rectfill, circ, circfill, cp, sprset, sprcp, print, sfx, play, stop, volume, cls, draw, run, pause, runcart, fps, btn, btnp, map, mapn, mget, mset, pal, tri, trifill, sshot)`);
-                        code = code.replace(/function\s+init\s+\(\)/, `window.${cartInitFnName} = function (color, colorize, layer, layern, mask, camera, pset, pget, line, rect, rectfill, circ, circfill, cp, sprset, sprcp, print, sfx, play, stop, volume, cls, draw, run, pause, runcart, fps, btn, btnp, map, mapn, mget, mset, pal, tri, trifill, sshot)`);
+                        code = code.replace(/function\s+update\s+\(\)/, `window.${cartUpdateFnName} = function (color, colorize, layer, layern, mask, camera, pset, pget, line, rect, rectfill, circ, circfill, cp, sprset, sprcp, print, sfx, play, stop, volume, cls, draw, run, pause, runcart, fps, btn, btnp, map, mapn, mget, mset, pal, tri, trifill, sshot, sin, cos, atan2, rnd, rndseed)`);
+                        code = code.replace(/function\s+init\s+\(\)/, `window.${cartInitFnName} = function (color, colorize, layer, layern, mask, camera, pset, pget, line, rect, rectfill, circ, circfill, cp, sprset, sprcp, print, sfx, play, stop, volume, cls, draw, run, pause, runcart, fps, btn, btnp, map, mapn, mget, mset, pal, tri, trifill, sshot, sin, cos, atan2, rnd, rndseed)`);
                         code = `
                             (function () {
                                 ${code}
@@ -1182,10 +1184,10 @@
                         }
 
                         const initfn = window[cartInitFnName]
-                                       ? window[cartInitFnName].bind(this, color, colorize, layer, layern, mask, camera, pset, pget, line, rect, rectfill, circ, circfill, cp, sprset, sprcp, print, sfx, play, stop, volume, cls, draw, run, pause, runcart, fps, btn, btnp, map, mapn, mget, mset, pal, tri, trifill, sshot)
+                                       ? window[cartInitFnName].bind(this, color, colorize, layer, layern, mask, camera, pset, pget, line, rect, rectfill, circ, circfill, cp, sprset, sprcp, print, sfx, play, stop, volume, cls, draw, run, pause, runcart, fps, btn, btnp, map, mapn, mget, mset, pal, tri, trifill, sshot, sin, cos, atan2, rnd, rndseed)
                                        : function () {};
                         run(container, assets,
-                            window[cartUpdateFnName].bind(this, color, colorize, layer, layern, mask, camera, pset, pget, line, rect, rectfill, circ, circfill, cp, sprset, sprcp, print, sfx, play, stop, volume, cls, draw, run, pause, runcart, fps, btn, btnp, map, mapn, mget, mset, pal, tri, trifill, sshot),
+                            window[cartUpdateFnName].bind(this, color, colorize, layer, layern, mask, camera, pset, pget, line, rect, rectfill, circ, circfill, cp, sprset, sprcp, print, sfx, play, stop, volume, cls, draw, run, pause, runcart, fps, btn, btnp, map, mapn, mget, mset, pal, tri, trifill, sshot, sin, cos, atan2, rnd, rndseed),
                             initfn,
                             false);
                     };
@@ -1296,7 +1298,7 @@
          */
         function mset (m, x, y, t) {
             let index = ((y * _maps[m].width) + x);
-            _maps[m].data[index] = t === 0 ? 0 : t + 1;
+            _maps[m].data[index] = t + 1;
         }
 
         /**
@@ -1327,6 +1329,52 @@
             }
         }
 
+        /**
+        * Alternative implementation of Math.sin() compatible with PICO-8's sin
+        * Handle values from 0 to 1 instead of 0 to 2PI
+        */
+        function sin (x) {
+            return Math.sin(-(x || 0) * (Math.PI * 2));
+        }
+
+        /**
+        * Alternative implementation of Math.cos() compatible with PICO-8's cos
+        * Handle values from 0 to 1 instead of 0 to 2PI
+        */
+        function cos (x) {
+            return Math.cos((x || 0) * (Math.PI * 2));
+        }
+
+        /**
+        * Alternative implementation of Math.atan2() compatible with PICO-8's atan2
+        * Handle values from 0 to 1 instead of 0 to 2PI
+        */
+        function atan2 (dx, dy) {
+            function angle(a) { return (((a - Math.PI) / (Math.PI * 2)) + 0.25) % 1.0; }
+
+            return angle(Math.atan2(dy, dx));
+        }
+
+        /**
+        * Return a random number between min and max (included) calculated based on
+        * _rndSeed. By default, return an integer number but you can ask for a float
+        */
+        function rnd (min = 0, max = 1, int = true) {
+            let x = Math.sin(_rndSeed++) * 10000;
+            x -= Math.floor(x);
+            x = (x * (max - min)) + min;
+            if (int) x = Math.round(x);
+            return x;
+        }
+
+        /**
+        * Set the seed of calculates a new random one
+        */
+        function rndseed (s) {
+            if (s === undefined) s = new Date().getTime();
+            _rndSeed = s;
+        }
+
         return {
             color, colorize,
             layer, layern, mask,
@@ -1344,7 +1392,9 @@
             map, mapn, mget, mset,
             pal,
             tri, trifill,
-            sshot
+            sshot,
+            sin, cos, atan2,
+            rnd, rndseed
         };
     }
 

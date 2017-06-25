@@ -24,19 +24,19 @@ X code cleanup
 X start screen
   pause
   make custom mod
-  license
-  documentation
-  tutorial
+X  license
+X  documentation
+X  tutorial
 X more map functions
 X limit buttons
 N return points from draw functions ?
 X triangle (+ triangle fill)
-  website
-  code optimizations
-    memoize
-    memoize colors conversion
-    trig functions
-    random
+X  website
+X  code optimizations
+X    memoize
+X    memoize colors conversion
+X    trig functions
+X    random
 X example cart with all functions
 X mask
 X api refactoring
@@ -46,4 +46,6 @@ X handle init if not defined in index.html
 X screenshot
   gif screen capture
 X cart label
-C example label
+X example label
+X update release
+  more source files

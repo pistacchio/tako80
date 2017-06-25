@@ -35,7 +35,7 @@ npmview('tako80', function(err, version, moduleInfo) {
     }
 });
 
-if (['new', 'compile', 'devel', 'example'].indexOf(process.argv[2]) === -1
+if (['new', 'compile', 'devel', 'example', 'update'].indexOf(process.argv[2]) === -1
     || process.argv.length <= 2) {
     printHelp();
 }
@@ -50,6 +50,10 @@ if (process.argv[2] === 'new') {
 
     ncp(path.join(__dirname, PROJECT_TEMPLATE_DIR), projectName);
     ncp(path.join(__dirname, TAKO_MAIN_FILE), path.join(projectName, TAKO_MAIN_FILE));
+}
+
+if (process.argv[2] === 'update') {
+    ncp(path.join(__dirname, TAKO_MAIN_FILE), TAKO_MAIN_FILE);
 }
 
 if (process.argv[2] === 'example') {
