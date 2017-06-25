@@ -70,6 +70,7 @@ function readCartJs () {
 
     if (assets.sources) {
         for (let source of assets.sources) {
+            if (source === 'cart.js') continue;
             cartJs = `${ fs.readFileSync(source).toString() }\n\n${ cartJs }`;
         }
     }
