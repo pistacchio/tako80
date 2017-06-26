@@ -92,6 +92,27 @@
         const _btns  = {};
         const _btnsp = {};
 
+        const publicFunctions = [color, colorize,
+            layer, layern, mask,
+            camera,
+            pset, pget,
+            line, rect, rectfill, circ, circfill,
+            cp,
+            sprset, sprcp,
+            print,
+            sfx, play, stop, volume,
+            cls, draw,
+            run, pause, runcart, stopcart,
+            fps,
+            btn, btnp,
+            map, mapn, mget, mset,
+            pal,
+            tri, trifill,
+            sshot,
+            sin, cos, atan2,
+            rnd, rndseed
+        ];
+
         let _rndSeed = new Date().getTime();
 
         /**
@@ -931,48 +952,9 @@
             .then(function () {
 
                 if (dev) {
-                    window.color    = color;
-                    window.colorize = colorize;
-                    window.layer    = layer;
-                    window.layern   = layern;
-                    window.mask     = mask;
-                    window.camera   = camera;
-                    window.pset     = pset;
-                    window.pget     = pget;
-                    window.line     = line;
-                    window.rect     = rect;
-                    window.rectfill = rectfill;
-                    window.circ     = circ;
-                    window.circfill = circfill;
-                    window.cp       = cp;
-                    window.sprset   = sprset;
-                    window.sprcp    = sprcp;
-                    window.print    = print;
-                    window.sfx      = sfx;
-                    window.play     = play;
-                    window.stop     = stop;
-                    window.sshot    = sshot;
-                    window.volume   = volume;
-                    window.cls      = cls;
-                    window.draw     = draw;
-                    window.run      = run;
-                    window.pause    = pause;
-                    window.runcart  = runcart;
-                    window.fps      = fps;
-                    window.btn      = btn;
-                    window.btnp     = btnp;
-                    window.map      = map;
-                    window.mapn     = mapn;
-                    window.mget     = mget;
-                    window.mset     = mset;
-                    window.pal      = pal;
-                    window.tri      = tri;
-                    window.trifill = trifill;
-                    window.cos     = cos;
-                    window.sin     = sin;
-                    window.atan2   = atan2;
-                    window.rnd     = rnd;
-                    window.rndseed = rndseed;
+                    for (let f of publicFunctions) {
+                        window[f.name] = f;
+                    }
                 }
 
                 _status = 'running';
@@ -1139,14 +1121,16 @@
                         let code = new TextDecoder("utf-8").decode(splittedcartData[0]);
                         const cartInitFnName = `tako80cartInit${ new Date().getTime() }`;
                         const cartUpdateFnName = `tako80cartUpdate${ new Date().getTime() }`;
-                        code = code.replace(/function\s+update\s+\(\)/, `window.${cartUpdateFnName} = function (color, colorize, layer, layern, mask, camera, pset, pget, line, rect, rectfill, circ, circfill, cp, sprset, sprcp, print, sfx, play, stop, volume, cls, draw, run, pause, runcart, fps, btn, btnp, map, mapn, mget, mset, pal, tri, trifill, sshot, sin, cos, atan2, rnd, rndseed)`);
-                        code = code.replace(/function\s+init\s+\(\)/, `window.${cartInitFnName} = function (color, colorize, layer, layern, mask, camera, pset, pget, line, rect, rectfill, circ, circfill, cp, sprset, sprcp, print, sfx, play, stop, volume, cls, draw, run, pause, runcart, fps, btn, btnp, map, mapn, mget, mset, pal, tri, trifill, sshot, sin, cos, atan2, rnd, rndseed)`);
+                        const cartFnName = `tako80cart${ new Date().getTime() }`;
+                        code = code.replace(/function\s+update\s+\(\)/, `window.${cartUpdateFnName} = function ()`);
+                        code = code.replace(/function\s+init\s+\(\)/, `window.${cartInitFnName} = function ()`);
                         code = `
-                            (function () {
+                            window.${ cartFnName } = function (${ publicFunctions.map(f => f.name).join(', ') }) {
                                 ${code}
-                             }());
+                            };
                         `;
                         eval(code);
+                        window[cartFnName].apply(this, publicFunctions);
 
                         // assets
                         const assets = {
@@ -1188,13 +1172,8 @@
                             assets.maps[mapName] = tilemapData;
                         }
 
-                        const initfn = window[cartInitFnName]
-                                       ? window[cartInitFnName].bind(this, color, colorize, layer, layern, mask, camera, pset, pget, line, rect, rectfill, circ, circfill, cp, sprset, sprcp, print, sfx, play, stop, volume, cls, draw, run, pause, runcart, fps, btn, btnp, map, mapn, mget, mset, pal, tri, trifill, sshot, sin, cos, atan2, rnd, rndseed)
-                                       : function () {};
-                        run(container, assets,
-                            window[cartUpdateFnName].bind(this, color, colorize, layer, layern, mask, camera, pset, pget, line, rect, rectfill, circ, circfill, cp, sprset, sprcp, print, sfx, play, stop, volume, cls, draw, run, pause, runcart, fps, btn, btnp, map, mapn, mget, mset, pal, tri, trifill, sshot, sin, cos, atan2, rnd, rndseed),
-                            initfn,
-                            false);
+                        const initfn = window[cartInitFnName] ? window[cartInitFnName] : function () {};
+                        run(container, assets, window[cartUpdateFnName], initfn, false);
                     };
                     fileReader.readAsArrayBuffer(cartData);
                 })
@@ -1380,27 +1359,7 @@
             _rndSeed = s;
         }
 
-        return {
-            color, colorize,
-            layer, layern, mask,
-            camera,
-            pset, pget,
-            line, rect, rectfill, circ, circfill,
-            cp,
-            sprset, sprcp,
-            print,
-            sfx, play, stop, volume,
-            cls, draw,
-            run, pause, runcart, stopcart,
-            fps,
-            btn, btnp,
-            map, mapn, mget, mset,
-            pal,
-            tri, trifill,
-            sshot,
-            sin, cos, atan2,
-            rnd, rndseed
-        };
+        return publicFunctions.reduce((acc, f) => { acc[f.name] = f; return acc; }, {});
     }
 
     // Export the functions run and runcart to the window object
