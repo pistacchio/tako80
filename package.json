@@ -1,6 +1,6 @@
 {
   "name": "tako80",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Retro game engine",
   "main": "tako80.js",
   "directories": {},
@@ -13,7 +13,8 @@
   "scripts": {
     "concat": "concat src/twgl.min.js src/player.js src/pt.js src/tako80.core.js -o tako80.min.js",
     "uglify": "uglifyjs tako80.min.js -o tako80.min.js",
-    "build": "npm run concat && npm run uglify"
+    "compile": "webpack",
+    "build": "npm run compile; npm run concat; npm run uglify"
   },
   "bin": {
     "tako80": "tako80.js"
@@ -31,7 +32,8 @@
   },
   "devDependencies": {
     "concat": "^1.0.3",
-    "uglify-es": "^3.0.15"
+    "uglify-es": "^3.0.15",
+    "webpack": "^3.0.0"
   },
   "dependencies": {
     "ncp": "^2.0.0",
