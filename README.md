@@ -5,11 +5,13 @@
 
 **tako80** runs in the browser making it easy to share your games. The development is done with Javascript and the API is very easy to use. It doesn't impose any limitation such as a maximum number of sprites or a limited size of the source code.
 
-To learn more about **tako80** read the [manual](http://tako80.net/manual).
+To learn more about **tako80** read the [manual](https://web.archive.org/web/20171231002018/http://tako80.net:80/manual).
 
 ### Changelog
 
+```
 0.1.7 [25-6-2017]
+
     - FIXED wrong publish of 0.1.5
     - FIXED error when assets.json is incomplete
 0.1.5 [25-6-2017]
